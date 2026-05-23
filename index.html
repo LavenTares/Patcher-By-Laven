@@ -284,10 +284,10 @@
     font-size: 22px;
   }
   .upload-zone .upload-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
     font-weight: 600;
-    font-style: italic;
+    font-style: normal;
     color: var(--text);
     margin-bottom: 5px;
   }
@@ -615,16 +615,7 @@
   </div>
 
   <!-- Action -->
-  <div class="card" style="padding: 22px;">
-    <div class="progress-section" id="progressSection">
-      <div class="progress-header">
-        <div class="progress-label">Processing</div>
-        <div class="progress-pct" id="progressPct">0%</div>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="progressBar"></div>
-      </div>
-    </div>
+  <div class="card" style="padding: 22px; --card-line: none;">
     <button class="btn-patch" id="btnPatch" disabled>
       Jalankan Patch
     </button>
@@ -649,9 +640,6 @@
   const btnPatch      = document.getElementById('btnPatch');
   const btnDownload   = document.getElementById('btnDownload');
   const logBox        = document.getElementById('logBox');
-  const progressSection = document.getElementById('progressSection');
-  const progressBar   = document.getElementById('progressBar');
-  const progressPct   = document.getElementById('progressPct');
   const resultInfo    = document.getElementById('resultInfo');
   const patchProgress = document.getElementById('patchProgress');
 
@@ -678,8 +666,6 @@
   }
 
   function setProgress(pct) {
-    progressBar.style.width = pct + '%';
-    progressPct.textContent = pct + '%';
     patchProgress.textContent = pct + '% → 100%';
   }
 
@@ -715,7 +701,6 @@
     btnPatch.disabled = true;
     btnDownload.classList.remove('show');
     resultInfo.classList.remove('show');
-    progressSection.classList.add('show');
     setProgress(0);
     setPatchState(1, '', 'PENDING');
 
@@ -751,7 +736,6 @@
       setPatchState(1, 'error', 'NOT FOUND');
       addLog('ERROR: Signature "mvhd" tidak ditemukan. Pastikan file adalah MP4 valid.', 'err');
       setProgress(0);
-      progressSection.classList.remove('show');
       btnPatch.disabled = false;
       return;
     }
@@ -766,7 +750,6 @@
       setPatchState(1, 'error', 'OUT OF RANGE');
       addLog('ERROR: Offset target di luar batas file.', 'err');
       setProgress(0);
-      progressSection.classList.remove('show');
       btnPatch.disabled = false;
       return;
     }
@@ -814,7 +797,6 @@
     addLog(`✓ Selesai! Klik tombol download untuk menyimpan.`, 'ok');
     btnPatch.disabled = false;
     await sleep(1200);
-    progressSection.classList.remove('show');
     setProgress(0);
   });
 
