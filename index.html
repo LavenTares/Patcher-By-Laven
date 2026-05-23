@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAVMARK PATCHER</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0b0f;
+    --surface: #13131a;
+    --surface2: #18181f;
+    --border: #222230;
+    --border-light: #2e2e40;
+    --accent: #6c63ff;
+    --accent2: #a78bfa;
+    --accent-dim: rgba(108,99,255,0.13);
+    --accent-glow: rgba(108,99,255,0.07);
+    --text: #eeeef5;
+    --text-muted: #5a5a78;
+    --text-sub: #8888aa;
+    --green: #34d399;
+    --green-dim: rgba(52,211,153,0.13);
+    --yellow: #fbbf24;
+    --yellow-dim: rgba(251,191,36,0.13);
+    --blue: #60a5fa;
+    --red: #f87171;
+    --teal: #2dd4bf;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px 60px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* subtle radial glow behind hero */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -120px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse at center, rgba(108,99,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── TOP NAV ── */
+  .topbar {
+    width: 100%;
+    max-width: 620px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0 0;
+    margin-bottom: 52px;
+    position: relative; z-index: 1;
+  }
+  .topbar-brand {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-sub);
+    letter-spacing: 0.3px;
+  }
+  .topbar-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    background: var(--accent-dim);
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(108,99,255,0.2);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    width: 100%;
+    max-width: 620px;
+    text-align: center;
+    margin-bottom: 18px;
+    position: relative; z-index: 1;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    opacity: 0.8;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 5vw, 32px);
+    font-weight: 600;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+    margin-bottom: 0;
+  }
+  .hero h1 .x-mark {
+    color: var(--accent2);
+  }
+  .hero h1 .tiktok-mark {
+    color: var(--teal);
+  }
+
+  /* ── FEATURES STRIP ── */
+  .features {
+    width: 100%;
+    max-width: 620px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 40px;
+    position: relative; z-index: 1;
+  }
+  .feat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.2s;
+  }
+  .feat-card:hover { border-color: var(--border-light); }
+  .feat-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .feat-dot.teal  { background: var(--teal);  box-shadow: 0 0 8px var(--teal); }
+  .feat-dot.dim   { background: #3a3a4a; }
+  .feat-card-body { flex: 1; }
+  .feat-card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .feat-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .feat-card-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
+  /* ── TIKTOK HANDLE ── */
+  .tiktok-handle {
+    width: 100%;
+    max-width: 620px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    position: relative; z-index: 1;
+  }
+  .tiktok-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-sub);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .tiktok-badge:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+  .tiktok-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN CONTAINER ── */
+  .container {
+    width: 100%;
+    max-width: 620px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative; z-index: 1;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 26px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s;
+  }
+  .card:hover { border-color: var(--border-light); }
+  /* subtle top line accent */
+  .card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 24px; right: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(108,99,255,0.3), transparent);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .card-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--border-light);
+  }
+
+  /* ── UPLOAD ZONE ── */
+  .upload-zone {
+    border: 1.5px dashed var(--border-light);
+    border-radius: 14px;
+    padding: 38px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    background: var(--surface2);
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+  }
+  .upload-zone input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  .upload-icon {
+    width: 48px; height: 48px;
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    font-size: 22px;
+  }
+  .upload-zone .upload-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+  .upload-zone .upload-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .upload-zone .upload-sub span {
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  .file-info {
+    margin-top: 14px;
+    padding: 13px 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    font-size: 13px;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .file-info.show { display: flex; }
+  .file-name { color: var(--text); font-weight: 600; word-break: break-all; }
+  .file-size {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    background: var(--surface);
+    padding: 3px 9px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── PATCH ITEM ── */
+  .patch-list { display: flex; flex-direction: column; gap: 10px; }
+  .patch-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    transition: all 0.25s;
+  }
+  .patch-item.active { border-color: var(--yellow); background: var(--yellow-dim); }
+  .patch-item.done   { border-color: var(--green);  background: var(--green-dim); }
+  .patch-item.error  { border-color: var(--red);    background: rgba(248,113,113,0.08); }
+
+  .patch-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--border-light);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+  .patch-item.active .patch-dot { background: var(--yellow); box-shadow: 0 0 10px var(--yellow); animation: pulse 1s infinite; }
+  .patch-item.done   .patch-dot { background: var(--green);  box-shadow: 0 0 10px var(--green); }
+  .patch-item.error  .patch-dot { background: var(--red);    box-shadow: 0 0 10px var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .patch-body { flex: 1; }
+  .patch-text { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .patch-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .patch-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    min-width: 76px;
+    text-align: right;
+    color: var(--text-muted);
+  }
+  .patch-item.done   .patch-status { color: var(--green); }
+  .patch-item.error  .patch-status { color: var(--red); }
+  .patch-item.active .patch-status { color: var(--yellow); }
+
+  /* ── PROGRESS VISUAL ── */
+  .progress-section { display: none; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+  .progress-section.show { display: flex; }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .progress-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .progress-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent2);
+  }
+  .progress-track {
+    height: 6px;
+    background: var(--border-light);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    width: 0%;
+    transition: width 0.35s ease;
+    border-radius: 100px;
+    box-shadow: 0 0 10px rgba(108,99,255,0.5);
+  }
+
+  /* ── LOG ── */
+  .log-box {
+    background: #0a0a0e;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    min-height: 90px;
+    max-height: 160px;
+    overflow-y: auto;
+    line-height: 2;
+  }
+  .log-box::-webkit-scrollbar { width: 3px; }
+  .log-box::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+  .log-line { display: flex; gap: 10px; }
+  .log-time { color: var(--border-light); flex-shrink: 0; }
+  .log-ok   { color: var(--green); }
+  .log-warn { color: var(--yellow); }
+  .log-err  { color: var(--red); }
+  .log-info { color: var(--blue); }
+  .log-method {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--accent2);
+    letter-spacing: 0.3px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-patch {
+    width: 100%;
+    padding: 17px;
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    border-radius: 14px;
+    transition: all 0.2s;
+  }
+  .btn-patch:hover:not(:disabled) {
+    background: var(--accent2);
+    box-shadow: 0 8px 28px rgba(108,99,255,0.4);
+    transform: translateY(-1px);
+  }
+  .btn-patch:active:not(:disabled) { transform: translateY(0); }
+  .btn-patch:disabled {
+    background: var(--surface2);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    border: 1px solid var(--border);
+  }
+
+  .btn-download {
+    width: 100%;
+    padding: 16px;
+    background: var(--green-dim);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 14px;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: none;
+    text-align: center;
+    margin-top: 10px;
+  }
+  .btn-download:hover {
+    background: var(--green);
+    color: #000;
+    box-shadow: 0 8px 28px rgba(52,211,153,0.3);
+    transform: translateY(-1px);
+  }
+  .btn-download.show { display: block; }
+
+  .result-info {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    display: none;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .result-info.show { display: block; }
+  .result-info span { color: var(--green); }
+
+  /* ── FOOTER ── */
+  .footer {
+    width: 100%;
+    max-width: 620px;
+    text-align: center;
+    padding-top: 40px;
+    font-size: 12px;
+    color: var(--text-muted);
+    position: relative; z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="topbar-brand">LAVMARK PATCHER</div>
+  <div class="topbar-tag">v2.0</div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-eyebrow">Bypass Converter</div>
+  <h1>LavenTares ✕ TikTok</h1>
+</div>
+
+<!-- TikTok Handle -->
+<div class="tiktok-handle">
+  <a class="tiktok-badge" href="https://tiktok.com/@LavenTares" target="_blank">
+    <svg class="tiktok-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+    @LavenTares
+  </a>
+</div>
+
+<!-- Features -->
+<div class="features">
+  <div class="feat-card">
+    <div class="feat-dot teal"></div>
+    <div class="feat-card-body">
+      <div class="feat-card-label">Up to 1080p / 60 FPS</div>
+      <div class="feat-card-title">High Quality — Zero Compression</div>
+      <div class="feat-card-sub">Support semua resolusi hingga 1080p 60FPS tanpa kompresi ulang.</div>
+    </div>
+  </div>
+  <div class="feat-card">
+    <div class="feat-dot dim"></div>
+    <div class="feat-card-body">
+      <div class="feat-card-label">100% Lokal — Semua Browser</div>
+      <div class="feat-card-title">Proses di Browser, Tanpa Server</div>
+      <div class="feat-card-sub">File tidak dikirim ke mana pun. Berjalan sepenuhnya di perangkat Anda.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="container">
+
+  <!-- Upload -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Upload Video</div>
+      <div class="card-num">01</div>
+    </div>
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" id="fileInput" accept="video/*,.mp4,.mov,.mkv,.avi">
+      <div class="upload-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent2)">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <div class="upload-title">Select Video File</div>
+      <div class="upload-sub">MP4 Up To 1080p60fps</div>
+    </div>
+    <div class="file-info" id="fileInfo">
+      <span class="file-name" id="fileName">—</span>
+      <span class="file-size" id="fileSize">—</span>
+    </div>
+  </div>
+
+  <!-- Patch List -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Patch Operation</div>
+      <div class="card-num">02</div>
+    </div>
+    <div class="patch-list">
+      <div class="patch-item" id="patch1">
+        <div class="patch-dot"></div>
+        <div class="patch-body">
+          <div class="patch-text">Proses video</div>
+          <div class="patch-code" id="patchProgress">0% → 100%</div>
+        </div>
+        <div class="patch-status" id="status1">PENDING</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Process Log</div>
+      <div class="card-num">03</div>
+    </div>
+    <div class="log-box" id="logBox">
+      <div class="log-line">
+        <span class="log-time">[INIT]</span>
+        <span class="log-info">Sistem siap. Silakan upload file video.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action -->
+  <div class="card" style="padding: 22px;">
+    <div class="progress-section" id="progressSection">
+      <div class="progress-header">
+        <div class="progress-label">Processing</div>
+        <div class="progress-pct" id="progressPct">0%</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+    </div>
+    <button class="btn-patch" id="btnPatch" disabled>
+      Jalankan Patch
+    </button>
+    <a class="btn-download" id="btnDownload" download>
+      Download Video Hasil Patch
+    </a>
+    <div class="result-info" id="resultInfo"></div>
+  </div>
+
+</div>
+
+<div class="footer">Semua proses berjalan di browser — file tidak dikirim ke server mana pun.</div>
+
+<script>
+  let selectedFile = null;
+
+  const fileInput     = document.getElementById('fileInput');
+  const uploadZone    = document.getElementById('uploadZone');
+  const fileInfo      = document.getElementById('fileInfo');
+  const fileName      = document.getElementById('fileName');
+  const fileSize      = document.getElementById('fileSize');
+  const btnPatch      = document.getElementById('btnPatch');
+  const btnDownload   = document.getElementById('btnDownload');
+  const logBox        = document.getElementById('logBox');
+  const progressSection = document.getElementById('progressSection');
+  const progressBar   = document.getElementById('progressBar');
+  const progressPct   = document.getElementById('progressPct');
+  const resultInfo    = document.getElementById('resultInfo');
+  const patchProgress = document.getElementById('patchProgress');
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+    return (bytes/(1024*1024)).toFixed(2) + ' MB';
+  }
+
+  function addLog(msg, type = '') {
+    const now = new Date();
+    const t = now.toTimeString().split(' ')[0];
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    line.innerHTML = `<span class="log-time">[${t}]</span><span class="${type ? 'log-'+type : ''}">${msg}</span>`;
+    logBox.appendChild(line);
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  function setPatchState(id, state, statusText) {
+    const el = document.getElementById('patch' + id);
+    el.className = 'patch-item ' + state;
+    document.getElementById('status' + id).textContent = statusText;
+  }
+
+  function setProgress(pct) {
+    progressBar.style.width = pct + '%';
+    progressPct.textContent = pct + '%';
+    patchProgress.textContent = pct + '% → 100%';
+  }
+
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) handleFile(fileInput.files[0]);
+  });
+
+  function handleFile(f) {
+    selectedFile = f;
+    fileName.textContent = f.name;
+    fileSize.textContent = formatSize(f.size);
+    fileInfo.classList.add('show');
+    btnPatch.disabled = false;
+    btnDownload.classList.remove('show');
+    resultInfo.classList.remove('show');
+    setPatchState(1, '', 'PENDING');
+    patchProgress.textContent = '0% → 100%';
+    addLog(`File dimuat: ${f.name} (${formatSize(f.size)})`, 'info');
+  }
+
+  btnPatch.addEventListener('click', async () => {
+    if (!selectedFile) return;
+
+    btnPatch.disabled = true;
+    btnDownload.classList.remove('show');
+    resultInfo.classList.remove('show');
+    progressSection.classList.add('show');
+    setProgress(0);
+    setPatchState(1, '', 'PENDING');
+
+    addLog('Membaca file ke buffer...', 'info');
+    setProgress(5);
+
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    addLog(`Buffer berhasil dimuat: ${data.length} bytes`, 'ok');
+    setProgress(15);
+    await sleep(200);
+
+    setPatchState(1, 'active', 'SCANNING');
+    addLog('Mencari signature "mvhd"...', 'info');
+    setProgress(25);
+    await sleep(150);
+
+    const mvhd = [0x6D, 0x76, 0x68, 0x64];
+    let mvhdIdx = -1;
+    for (let i = 0; i < data.length - 4; i++) {
+      if (data[i]   === mvhd[0] && data[i+1] === mvhd[1] &&
+          data[i+2] === mvhd[2] && data[i+3] === mvhd[3]) {
+        mvhdIdx = i;
+        break;
+      }
+    }
+
+    setProgress(40);
+    await sleep(150);
+
+    if (mvhdIdx === -1) {
+      setPatchState(1, 'error', 'NOT FOUND');
+      addLog('ERROR: Signature "mvhd" tidak ditemukan. Pastikan file adalah MP4 valid.', 'err');
+      setProgress(0);
+      progressSection.classList.remove('show');
+      btnPatch.disabled = false;
+      return;
+    }
+
+    addLog(`"mvhd" ditemukan di offset 0x${mvhdIdx.toString(16).toUpperCase().padStart(8,'0')}`, 'ok');
+    setProgress(55);
+    await sleep(150);
+
+    const targetIdx = mvhdIdx + 4 + 43;
+
+    if (targetIdx >= data.length) {
+      setPatchState(1, 'error', 'OUT OF RANGE');
+      addLog('ERROR: Offset target di luar batas file.', 'err');
+      setProgress(0);
+      progressSection.classList.remove('show');
+      btnPatch.disabled = false;
+      return;
+    }
+
+    const oldVal = data[targetIdx];
+    addLog(`Target offset: 0x${targetIdx.toString(16).toUpperCase().padStart(8,'0')} | Nilai: 0x${oldVal.toString(16).toUpperCase().padStart(2,'0')}`, 'info');
+    setProgress(68);
+    await sleep(150);
+
+    if (oldVal === 0x01) {
+      addLog('INFO: Nilai sudah 0x01, tidak perlu diubah.', 'warn');
+      setPatchState(1, 'done', 'SKIPPED');
+    } else {
+      data[targetIdx] = 0x01;
+      const verifyVal = data[targetIdx];
+      setProgress(80);
+      await sleep(120);
+      if (verifyVal === 0x01) {
+        addLog(`BERHASIL: 0x${oldVal.toString(16).toUpperCase().padStart(2,'0')} → 0x01 ✓ terverifikasi`, 'ok');
+        setPatchState(1, 'done', 'PATCHED ✓');
+      } else {
+        addLog(`ERROR: Write gagal!`, 'err');
+        setPatchState(1, 'error', 'WRITE FAIL');
+      }
+    }
+
+    setProgress(90);
+    await sleep(250);
+
+    addLog('Membuat file output...', 'info');
+    const blob = new Blob([data.buffer], { type: selectedFile.type || 'video/mp4' });
+    const url = URL.createObjectURL(blob);
+    const outName = selectedFile.name.replace(/(\.[^.]+)$/, '_LavenTaresPatcher$1');
+
+    btnDownload.href = url;
+    btnDownload.download = outName;
+    btnDownload.classList.add('show');
+
+    resultInfo.innerHTML = `File siap: <span>${outName}</span> &nbsp;|&nbsp; <span>${formatSize(blob.size)}</span>`;
+    resultInfo.classList.add('show');
+
+    setProgress(100);
+    await sleep(300);
+
+    addLog(`✓ Selesai! Klik tombol download untuk menyimpan.`, 'ok');
+    btnPatch.disabled = false;
+    await sleep(1200);
+    progressSection.classList.remove('show');
+    setProgress(0);
+  });
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>
