@@ -372,42 +372,6 @@
   .patch-item.error  .patch-status { color: var(--red); }
   .patch-item.active .patch-status { color: var(--yellow); }
 
-  /* ── PROGRESS VISUAL ── */
-  .progress-section { display: none; flex-direction: column; gap: 8px; margin-bottom: 4px; }
-  .progress-section.show { display: flex; }
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .progress-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-sub);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .progress-pct {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--accent2);
-  }
-  .progress-track {
-    height: 6px;
-    background: var(--border-light);
-    border-radius: 100px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    width: 0%;
-    transition: width 0.35s ease;
-    border-radius: 100px;
-    box-shadow: 0 0 10px rgba(108,99,255,0.5);
-  }
-
   /* ── LOG ── */
   .log-box {
     background: #0a0a0e;
@@ -683,16 +647,35 @@
   });
 
   function handleFile(f) {
-    selectedFile = f;
-    fileName.textContent = f.name;
-    fileSize.textContent = formatSize(f.size);
-    fileInfo.classList.add('show');
-    btnPatch.disabled = false;
-    btnDownload.classList.remove('show');
-    resultInfo.classList.remove('show');
-    setPatchState(1, '', 'PENDING');
-    patchProgress.textContent = '0% → 100%';
-    addLog(`File dimuat: ${f.name} (${formatSize(f.size)})`, 'info');
+    const video = document.createElement('video');
+    const url = URL.createObjectURL(f);
+    video.src = url;
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      const h = video.videoHeight;
+      const w = video.videoWidth;
+      if (h > 1080 || w > 1920) {
+        addLog(`ERROR: Resolusi ${w}x${h} melebihi batas 1080p. Upload video maksimal 1920x1080.`, 'err');
+        fileInfo.classList.remove('show');
+        btnPatch.disabled = true;
+        selectedFile = null;
+        return;
+      }
+      selectedFile = f;
+      fileName.textContent = f.name;
+      fileSize.textContent = formatSize(f.size);
+      fileInfo.classList.add('show');
+      btnPatch.disabled = false;
+      btnDownload.classList.remove('show');
+      resultInfo.classList.remove('show');
+      setPatchState(1, '', 'PENDING');
+      patchProgress.textContent = '0% → 100%';
+      addLog(`File dimuat: ${f.name} (${formatSize(f.size)}) — ${w}x${h}`, 'ok');
+    };
+    video.onerror = () => {
+      URL.revokeObjectURL(url);
+      addLog('ERROR: Gagal membaca metadata video.', 'err');
+    };
   }
 
   btnPatch.addEventListener('click', async () => {
