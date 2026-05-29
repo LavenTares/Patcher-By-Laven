@@ -4,7 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LAVMARK PATCHER</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Rajdhani:wght@600;700&family=Orbitron:wght@700;900&family=Squada+One&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Ethnocentric';
+    src: url('https://db.onlinewebfonts.com/t/c6d96db36ca3b8094d9e0b89cde24001.woff2') format('woff2'),
+         url('https://db.onlinewebfonts.com/t/c6d96db36ca3b8094d9e0b89cde24001.woff') format('woff');
+    font-style: italic;
+    font-weight: bold;
+  }
+</style>
 <style>
   :root {
     --bg: #0b0b0f;
@@ -42,7 +51,6 @@
     overflow-x: hidden;
   }
 
-  /* subtle radial glow behind hero */
   body::before {
     content: '';
     position: fixed;
@@ -54,7 +62,7 @@
     z-index: 0;
   }
 
-  /* ── TOP NAV ── */
+  /* ── TOP BAR ── */
   .topbar {
     width: 100%;
     max-width: 620px;
@@ -62,7 +70,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 22px 0 0;
-    margin-bottom: 52px;
+    margin-bottom: 28px;
     position: relative; z-index: 1;
   }
   .topbar-brand {
@@ -81,6 +89,61 @@
     border: 1px solid rgba(108,99,255,0.2);
     letter-spacing: 0.5px;
   }
+
+  /* ── TAB NAV ── */
+  .tab-nav {
+    width: 100%;
+    max-width: 620px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 5px;
+    margin-bottom: 32px;
+    position: relative; z-index: 1;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 11px 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.2s;
+    position: relative;
+    letter-spacing: 0.2px;
+  }
+  .tab-btn:hover:not(.active) {
+    color: var(--text-sub);
+    background: rgba(255,255,255,0.03);
+  }
+  .tab-btn.active {
+    color: var(--text);
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+  }
+  .tab-dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-left: 7px;
+    vertical-align: middle;
+    margin-top: -2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .tab-btn.active .tab-dot { opacity: 1; }
+
+  /* ── TAB CONTENT ── */
+  .tab-content { display: none; width: 100%; }
+  .tab-content.active { display: flex; flex-direction: column; align-items: center; }
 
   /* ── HERO ── */
   .hero {
@@ -107,13 +170,41 @@
     color: var(--text);
     line-height: 1.2;
     letter-spacing: 0.5px;
-    margin-bottom: 0;
   }
-  .hero h1 .x-mark {
-    color: var(--accent2);
+  .hero h1 .x-mark { color: var(--accent2); }
+  .hero h1 .tiktok-mark { color: var(--teal); }
+  .hero-title-link {
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s;
   }
-  .hero h1 .tiktok-mark {
-    color: var(--teal);
+  .hero-title-link:hover { opacity: 0.8; }
+  .hero-title-link h1 {
+    font-family: 'Squada One', 'Teko', sans-serif !important;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(28px, 8vw, 46px);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transform: skewX(-6deg);
+    display: inline-block;
+    -webkit-text-stroke: 0.5px rgba(255,255,255,0.15);
+  }
+  /* Glitch tab font — sama dengan bypass */
+  .tab-btn.glitch-font {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+  /* Bypass tab font */
+  .tab-btn.bypass-font {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    font-size: 14px;
+    text-transform: uppercase;
   }
 
   /* ── FEATURES STRIP ── */
@@ -123,7 +214,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     position: relative; z-index: 1;
   }
   .feat-card {
@@ -142,7 +233,8 @@
     border-radius: 50%;
     flex-shrink: 0;
   }
-  .feat-dot.teal  { background: var(--teal);  box-shadow: 0 0 8px var(--teal); }
+  .feat-dot.teal  { background: var(--teal); box-shadow: 0 0 8px var(--teal); }
+  .feat-dot.green { background: var(--green); box-shadow: 0 0 8px rgba(52,211,153,0.5); }
   .feat-dot.dim   { background: #3a3a4a; }
   .feat-card-body { flex: 1; }
   .feat-card-label {
@@ -190,15 +282,7 @@
     text-decoration: none;
     transition: all 0.2s;
   }
-  .tiktok-badge:hover {
-    border-color: var(--teal);
-    color: var(--teal);
-  }
-  .tiktok-icon {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-  }
+  .tiktok-badge:hover { border-color: var(--teal); color: var(--teal); }
 
   /* ── MAIN CONTAINER ── */
   .container {
@@ -221,7 +305,6 @@
     transition: border-color 0.25s;
   }
   .card:hover { border-color: var(--border-light); }
-  /* subtle top line accent */
   .card::after {
     content: '';
     position: absolute;
@@ -229,7 +312,6 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(108,99,255,0.3), transparent);
   }
-
   .card-header {
     display: flex;
     align-items: center;
@@ -287,7 +369,6 @@
     font-family: 'Outfit', sans-serif;
     font-size: 15px;
     font-weight: 600;
-    font-style: normal;
     color: var(--text);
     margin-bottom: 5px;
   }
@@ -295,11 +376,9 @@
     font-size: 12px;
     color: var(--text-muted);
   }
-  .upload-zone .upload-sub span {
-    color: var(--accent2);
-    font-weight: 600;
-  }
+  .upload-zone .upload-sub span { color: var(--accent2); font-weight: 600; }
 
+  /* ── FILE INFO ── */
   .file-info {
     margin-top: 14px;
     padding: 13px 16px;
@@ -323,6 +402,57 @@
     padding: 3px 9px;
     border-radius: 7px;
     border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ── SCALE SELECTOR ── */
+  .scale-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .scale-btn {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+  .scale-btn:hover {
+    border-color: var(--border-light);
+    background: rgba(255,255,255,0.04);
+  }
+  .scale-btn.active {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+  .sb-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--text-muted);
+    transition: color 0.15s;
+  }
+  .scale-btn.active .sb-num { color: var(--text); }
+  .sb-fps {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 5px;
+    letter-spacing: 0.08em;
+    transition: color 0.15s;
+  }
+  .scale-btn.active .sb-fps { color: var(--accent2); }
+  .sb-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   /* ── PATCH ITEM ── */
@@ -340,7 +470,6 @@
   .patch-item.active { border-color: var(--yellow); background: var(--yellow-dim); }
   .patch-item.done   { border-color: var(--green);  background: var(--green-dim); }
   .patch-item.error  { border-color: var(--red);    background: rgba(248,113,113,0.08); }
-
   .patch-dot {
     width: 10px; height: 10px;
     border-radius: 50%;
@@ -349,10 +478,9 @@
     transition: all 0.3s;
   }
   .patch-item.active .patch-dot { background: var(--yellow); box-shadow: 0 0 10px var(--yellow); animation: pulse 1s infinite; }
-  .patch-item.done   .patch-dot { background: var(--green);  box-shadow: 0 0 10px var(--green); }
-  .patch-item.error  .patch-dot { background: var(--red);    box-shadow: 0 0 10px var(--red); }
+  .patch-item.done   .patch-dot { background: var(--green); box-shadow: 0 0 10px var(--green); }
+  .patch-item.error  .patch-dot { background: var(--red); box-shadow: 0 0 10px var(--red); }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
   .patch-body { flex: 1; }
   .patch-text { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
   .patch-code {
@@ -368,45 +496,13 @@
     text-align: right;
     color: var(--text-muted);
   }
-  .patch-item.done   .patch-status { color: var(--green); }
-  .patch-item.error  .patch-status { color: var(--red); }
+  .patch-item.done  .patch-status { color: var(--green); }
+  .patch-item.error .patch-status { color: var(--red); }
   .patch-item.active .patch-status { color: var(--yellow); }
 
-  /* ── PROGRESS VISUAL ── */
-  .progress-section { display: none; flex-direction: column; gap: 8px; margin-bottom: 4px; }
-  .progress-section.show { display: flex; }
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .progress-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-sub);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .progress-pct {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--accent2);
-  }
-  .progress-track {
-    height: 6px;
-    background: var(--border-light);
-    border-radius: 100px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    width: 0%;
-    transition: width 0.35s ease;
-    border-radius: 100px;
-    box-shadow: 0 0 10px rgba(108,99,255,0.5);
-  }
+  /* progress bar - hidden */
+  .op-progress { display: none !important; }
+  .op-progress-fill { display: none !important; }
 
   /* ── LOG ── */
   .log-box {
@@ -429,13 +525,6 @@
   .log-warn { color: var(--yellow); }
   .log-err  { color: var(--red); }
   .log-info { color: var(--blue); }
-  .log-method {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 13px;
-    color: var(--accent2);
-    letter-spacing: 0.3px;
-  }
 
   /* ── BUTTONS ── */
   .btn-patch {
@@ -501,6 +590,39 @@
   .result-info.show { display: block; }
   .result-info span { color: var(--green); }
 
+  /* ── SCALE DOWNLOAD ROW ── */
+  .dl-row {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: rgba(52,211,153,0.06);
+    border: 1px solid rgba(52,211,153,0.2);
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 10px;
+    animation: fadeUp 0.3s ease;
+  }
+  .dl-row.show { display: flex; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+  .dl-info .dl-meta  { font-size: 10px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 3px; }
+  .dl-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .dl-btn:hover { background: var(--accent2); }
+
   /* ── FOOTER ── */
   .footer {
     width: 100%;
@@ -518,130 +640,281 @@
 <!-- Top Bar -->
 <div class="topbar">
   <div class="topbar-brand">LAVMARK PATCHER</div>
-  <div class="topbar-tag">v2.0</div>
+  <div class="topbar-tag">v3.0</div>
 </div>
 
-<!-- Hero -->
-<div class="hero">
-  <div class="hero-eyebrow">Bypass Converter</div>
-  <h1>LavenTares ✕ TikTok</h1>
+<!-- Tab Navigation -->
+<div class="tab-nav">
+  <button class="tab-btn bypass-font active" onclick="switchTab('patcher')">
+    Bypass <span class="tab-dot"></span>
+  </button>
+  <button class="tab-btn glitch-font" onclick="switchTab('itsscale')">
+    Glitch <span class="tab-dot"></span>
+  </button>
 </div>
 
-<!-- TikTok Handle -->
-<div class="tiktok-handle">
-  <a class="tiktok-badge" href="https://tiktok.com/@LavenTares" target="_blank">
-    <svg class="tiktok-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
-    @LavenTares
-  </a>
-</div>
+<!-- ═══════════════════════════════════════════ -->
+<!-- TAB 1: PATCHER -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tab-content active" id="tab-patcher">
 
-<!-- Features -->
-<div class="features">
-  <div class="feat-card">
-    <div class="feat-dot teal"></div>
-    <div class="feat-card-body">
-      <div class="feat-card-label">Up to 1080p / 60 FPS</div>
-      <div class="feat-card-title">High Quality — Zero Compression</div>
-      <div class="feat-card-sub">Support semua resolusi hingga 1080p 60FPS tanpa kompresi ulang.</div>
-    </div>
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">Bypass Converter</div>
   </div>
-  <div class="feat-card">
-    <div class="feat-dot dim"></div>
-    <div class="feat-card-body">
-      <div class="feat-card-label">100% Lokal — Semua Browser</div>
-      <div class="feat-card-title">Proses di Browser, Tanpa Server</div>
-      <div class="feat-card-sub">File tidak dikirim ke mana pun. Berjalan sepenuhnya di perangkat Anda.</div>
-    </div>
-  </div>
-</div>
 
-<!-- Main -->
-<div class="container">
-
-  <!-- Upload -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">Upload Video</div>
-      <div class="card-num">01</div>
-    </div>
-    <div class="upload-zone" id="uploadZone">
-      <input type="file" id="fileInput" accept="video/*,.mp4,.mov,.mkv,.avi">
-      <div class="upload-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent2)">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
+  <!-- Features -->
+  <div class="features">
+    <div class="feat-card">
+      <div class="feat-dot teal"></div>
+      <div class="feat-card-body">
+        <div class="feat-card-label">Up to 1080p / 60 FPS</div>
+        <div class="feat-card-title">High Quality — Zero Compression</div>
+        <div class="feat-card-sub">Support semua resolusi hingga 1080p 60FPS tanpa kompresi ulang.</div>
       </div>
-      <div class="upload-title">Select Video File</div>
-      <div class="upload-sub">MP4 Up To 1080p60fps</div>
     </div>
-    <div class="file-info" id="fileInfo">
-      <span class="file-name" id="fileName">—</span>
-      <span class="file-size" id="fileSize">—</span>
+    <div class="feat-card">
+      <div class="feat-dot dim"></div>
+      <div class="feat-card-body">
+        <div class="feat-card-label">100% Lokal — Semua Browser</div>
+        <div class="feat-card-title">Proses di Browser, Tanpa Server</div>
+        <div class="feat-card-sub">File tidak dikirim ke mana pun. Berjalan sepenuhnya di perangkat Anda.</div>
+      </div>
     </div>
   </div>
 
-  <!-- Patch List -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">Patch Operation</div>
-      <div class="card-num">02</div>
-    </div>
-    <div class="patch-list">
-      <div class="patch-item" id="patch1">
-        <div class="patch-dot"></div>
-        <div class="patch-body">
-          <div class="patch-text">Proses video</div>
-          <div class="patch-code" id="patchProgress">0% → 100%</div>
+  <!-- Main Cards -->
+  <div class="container">
+
+    <!-- Upload -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Upload Video</div>
+        <div class="card-num">01</div>
+      </div>
+      <div class="upload-zone" id="p-uploadZone">
+        <input type="file" id="p-fileInput" accept="video/*,.mp4,.mov,.mkv,.avi">
+        <div class="upload-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent2)">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
         </div>
-        <div class="patch-status" id="status1">PENDING</div>
+        <div class="upload-title">Select Video File</div>
+        <div class="upload-sub">MP4 Up To 1080p60fps</div>
+      </div>
+      <div class="file-info" id="p-fileInfo">
+        <span class="file-name" id="p-fileName">—</span>
+        <span class="file-size" id="p-fileSize">—</span>
+      </div>
+    </div>
+
+    <!-- Patch Operation -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Patch Operation</div>
+        <div class="card-num">02</div>
+      </div>
+      <div class="patch-list">
+        <div class="patch-item" id="p-patch1">
+          <div class="patch-dot"></div>
+          <div class="patch-body">
+            <div class="patch-text">Proses video</div>
+            <div class="patch-code" id="p-patchProgress">0% → 100%</div>
+          </div>
+          <div class="patch-status" id="p-status1">PENDING</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Process Log</div>
+        <div class="card-num">03</div>
+      </div>
+      <div class="log-box" id="p-logBox">
+        <div class="log-line">
+          <span class="log-time">[INIT]</span>
+          <span class="log-info">Sistem siap. Silakan upload file video.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action -->
+    <div class="card" style="padding: 22px;">
+      <button class="btn-patch" id="p-btnPatch" disabled>Jalankan Patch</button>
+      <a class="btn-download" id="p-btnDownload" download>Download Video Hasil Patch</a>
+      <div class="result-info" id="p-resultInfo"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- TAB 2: ITS SCALE -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tab-content" id="tab-itsscale">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">Glitcher Video</div>
+  </div>
+
+  <!-- Features -->
+  <div class="features">
+    <div class="feat-card">
+      <div class="feat-dot green"></div>
+      <div class="feat-card-body">
+        <div class="feat-card-label">60fps / 90fps / 120fps</div>
+        <div class="feat-card-title">Zero Re-encoding</div>
+        <div class="feat-card-sub">FPS turun, durasi bertambah — kualitas video 100% identik.</div>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-dot dim"></div>
+      <div class="feat-card-body">
+        <div class="feat-card-label">100% Lokal — Semua Browser</div>
+        <div class="feat-card-title">Proses di Browser, Tanpa Server</div>
+        <div class="feat-card-sub">File tidak dikirim ke mana pun. Berjalan sepenuhnya di perangkat Anda.</div>
       </div>
     </div>
   </div>
 
-  <!-- Log -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">Process Log</div>
-      <div class="card-num">03</div>
-    </div>
-    <div class="log-box" id="logBox">
-      <div class="log-line">
-        <span class="log-time">[INIT]</span>
-        <span class="log-info">Sistem siap. Silakan upload file video.</span>
+  <!-- Main Cards -->
+  <div class="container">
+
+    <!-- Upload -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Upload Video</div>
+        <div class="card-num">01</div>
+      </div>
+      <div class="upload-zone" id="s-uploadZone">
+        <input type="file" id="s-fileInput" accept="video/mp4,.mp4,.m4v">
+        <div class="upload-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent2)">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <div class="upload-title">Select Video File</div>
+        <div class="upload-sub">MP4 — 60fps / 90fps / 120fps source</div>
+      </div>
+      <div class="file-info" id="s-fileInfo">
+        <span class="file-name" id="s-fileName">—</span>
+        <span class="file-size" id="s-fileSize">—</span>
       </div>
     </div>
-  </div>
 
-  <!-- Action -->
-  <div class="card" style="padding: 22px; --card-line: none;">
-    <button class="btn-patch" id="btnPatch" disabled>
-      Jalankan Patch
-    </button>
-    <a class="btn-download" id="btnDownload" download>
-      Download Video Hasil Patch
-    </a>
-    <div class="result-info" id="resultInfo"></div>
-  </div>
+    <!-- Scale Factor -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Scale Factor</div>
+        <div class="card-num">02</div>
+      </div>
+      <div class="scale-grid">
+        <div class="scale-btn active" data-scale="2" onclick="selectScale(2)">
+          <div class="sb-num">2×</div>
+          <div class="sb-fps">60fps src</div>
+          <div class="sb-label">→ 30fps</div>
+        </div>
+        <div class="scale-btn" data-scale="3" onclick="selectScale(3)">
+          <div class="sb-num">3×</div>
+          <div class="sb-fps">90fps src</div>
+          <div class="sb-label">→ 30fps</div>
+        </div>
+        <div class="scale-btn" data-scale="4" onclick="selectScale(4)">
+          <div class="sb-num">4×</div>
+          <div class="sb-fps">120fps src</div>
+          <div class="sb-label">→ 30fps</div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Patch Operation -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Patch Operation</div>
+        <div class="card-num">03</div>
+      </div>
+      <div class="patch-list">
+        <div class="patch-item" id="s-patch1">
+          <div class="patch-dot"></div>
+          <div class="patch-body">
+            <div class="patch-text">Proses video</div>
+            <div class="patch-code" id="s-patchProgress">0% → 100%</div>
+          </div>
+          <div class="patch-status" id="s-status1">PENDING</div>
+        </div>
+      </div>
+      <div class="op-progress" id="s-opProgress">
+        <div class="op-progress-fill" id="s-opFill"></div>
+      </div>
+      <div class="dl-row" id="s-dlRow">
+        <div class="dl-info">
+          <div class="dl-meta" id="s-dlMeta">—</div>
+        </div>
+        <a id="s-dlBtn" class="dl-btn" href="#" download>Download</a>
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Process Log</div>
+        <div class="card-num">04</div>
+      </div>
+      <div class="log-box" id="s-logBox">
+        <div class="log-line">
+          <span class="log-time">[INIT]</span>
+          <span class="log-info">Sistem siap. Silakan upload file video MP4.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action -->
+    <div class="card" style="padding: 22px;">
+      <button class="btn-patch" id="s-btnProcess" disabled>Jalankan Scale</button>
+    </div>
+
+  </div>
 </div>
 
 <div class="footer">Semua proses berjalan di browser — file tidak dikirim ke server mana pun.</div>
 
 <script>
-  let selectedFile = null;
+/* ═══════════════════════════════════════
+   TAB SWITCHER
+═══════════════════════════════════════ */
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    const tabs = ['patcher', 'itsscale'];
+    btn.classList.toggle('active', tabs[i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(el => {
+    el.classList.toggle('active', el.id === 'tab-' + name);
+  });
+}
 
-  const fileInput     = document.getElementById('fileInput');
-  const uploadZone    = document.getElementById('uploadZone');
-  const fileInfo      = document.getElementById('fileInfo');
-  const fileName      = document.getElementById('fileName');
-  const fileSize      = document.getElementById('fileSize');
-  const btnPatch      = document.getElementById('btnPatch');
-  const btnDownload   = document.getElementById('btnDownload');
-  const logBox        = document.getElementById('logBox');
-  const resultInfo    = document.getElementById('resultInfo');
-  const patchProgress = document.getElementById('patchProgress');
+/* ═══════════════════════════════════════
+   PATCHER TAB LOGIC
+═══════════════════════════════════════ */
+(function() {
+  const fileInput     = document.getElementById('p-fileInput');
+  const uploadZone    = document.getElementById('p-uploadZone');
+  const fileInfo      = document.getElementById('p-fileInfo');
+  const fileName      = document.getElementById('p-fileName');
+  const fileSize      = document.getElementById('p-fileSize');
+  const btnPatch      = document.getElementById('p-btnPatch');
+  const btnDownload   = document.getElementById('p-btnDownload');
+  const logBox        = document.getElementById('p-logBox');
+  const resultInfo    = document.getElementById('p-resultInfo');
+  const patchProgress = document.getElementById('p-patchProgress');
+
+  let selectedFile = null;
 
   function formatSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -649,20 +922,20 @@
     return (bytes/(1024*1024)).toFixed(2) + ' MB';
   }
 
-  function addLog(msg, type = '') {
+  function addLog(msg, type) {
     const now = new Date();
     const t = now.toTimeString().split(' ')[0];
     const line = document.createElement('div');
     line.className = 'log-line';
-    line.innerHTML = `<span class="log-time">[${t}]</span><span class="${type ? 'log-'+type : ''}">${msg}</span>`;
+    line.innerHTML = `<span class="log-time">[${t}]</span><span class="${type ? 'log-'+type : 'log-info'}">${msg}</span>`;
     logBox.appendChild(line);
     logBox.scrollTop = logBox.scrollHeight;
   }
 
-  function setPatchState(id, state, statusText) {
-    const el = document.getElementById('patch' + id);
+  function setPatchState(state, statusText) {
+    const el = document.getElementById('p-patch1');
     el.className = 'patch-item ' + state;
-    document.getElementById('status' + id).textContent = statusText;
+    document.getElementById('p-status1').textContent = statusText;
   }
 
   function setProgress(pct) {
@@ -677,10 +950,7 @@
     const f = e.dataTransfer.files[0];
     if (f) handleFile(f);
   });
-
-  fileInput.addEventListener('change', () => {
-    if (fileInput.files[0]) handleFile(fileInput.files[0]);
-  });
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
 
   function handleFile(f) {
     selectedFile = f;
@@ -690,19 +960,18 @@
     btnPatch.disabled = false;
     btnDownload.classList.remove('show');
     resultInfo.classList.remove('show');
-    setPatchState(1, '', 'PENDING');
+    setPatchState('', 'PENDING');
     patchProgress.textContent = '0% → 100%';
-    addLog(`File dimuat: ${f.name} (${formatSize(f.size)})`, 'info');
+    addLog(`File dimuat: ${f.name} (${formatSize(f.size)})`, 'ok');
   }
 
   btnPatch.addEventListener('click', async () => {
     if (!selectedFile) return;
-
     btnPatch.disabled = true;
     btnDownload.classList.remove('show');
     resultInfo.classList.remove('show');
     setProgress(0);
-    setPatchState(1, '', 'PENDING');
+    setPatchState('', 'PENDING');
 
     addLog('Membaca file ke buffer...', 'info');
     setProgress(5);
@@ -714,72 +983,58 @@
     setProgress(15);
     await sleep(200);
 
-    setPatchState(1, 'active', 'SCANNING');
+    setPatchState('active', 'SCANNING');
     addLog('Mencari signature "mvhd"...', 'info');
     setProgress(25);
     await sleep(150);
 
-    const mvhd = [0x6D, 0x76, 0x68, 0x64];
+    const mvhd = [0x6D,0x76,0x68,0x64];
     let mvhdIdx = -1;
     for (let i = 0; i < data.length - 4; i++) {
-      if (data[i]   === mvhd[0] && data[i+1] === mvhd[1] &&
-          data[i+2] === mvhd[2] && data[i+3] === mvhd[3]) {
-        mvhdIdx = i;
-        break;
+      if (data[i]===mvhd[0] && data[i+1]===mvhd[1] && data[i+2]===mvhd[2] && data[i+3]===mvhd[3]) {
+        mvhdIdx = i; break;
       }
     }
 
-    setProgress(40);
-    await sleep(150);
+    setProgress(40); await sleep(150);
 
     if (mvhdIdx === -1) {
-      setPatchState(1, 'error', 'NOT FOUND');
+      setPatchState('error', 'NOT FOUND');
       addLog('ERROR: Signature "mvhd" tidak ditemukan. Pastikan file adalah MP4 valid.', 'err');
-      setProgress(0);
-      btnPatch.disabled = false;
-      return;
+      setProgress(0); btnPatch.disabled = false; return;
     }
 
     addLog(`"mvhd" ditemukan di offset 0x${mvhdIdx.toString(16).toUpperCase().padStart(8,'0')}`, 'ok');
-    setProgress(55);
-    await sleep(150);
+    setProgress(55); await sleep(150);
 
     const targetIdx = mvhdIdx + 4 + 43;
-
     if (targetIdx >= data.length) {
-      setPatchState(1, 'error', 'OUT OF RANGE');
+      setPatchState('error', 'OUT OF RANGE');
       addLog('ERROR: Offset target di luar batas file.', 'err');
-      setProgress(0);
-      btnPatch.disabled = false;
-      return;
+      setProgress(0); btnPatch.disabled = false; return;
     }
 
     const oldVal = data[targetIdx];
     addLog(`Target offset: 0x${targetIdx.toString(16).toUpperCase().padStart(8,'0')} | Nilai: 0x${oldVal.toString(16).toUpperCase().padStart(2,'0')}`, 'info');
-    setProgress(68);
-    await sleep(150);
+    setProgress(68); await sleep(150);
 
     if (oldVal === 0x01) {
       addLog('INFO: Nilai sudah 0x01, tidak perlu diubah.', 'warn');
-      setPatchState(1, 'done', 'SKIPPED');
+      setPatchState('done', 'SKIPPED');
     } else {
       data[targetIdx] = 0x01;
-      const verifyVal = data[targetIdx];
-      setProgress(80);
-      await sleep(120);
-      if (verifyVal === 0x01) {
+      if (data[targetIdx] === 0x01) {
         addLog(`BERHASIL: 0x${oldVal.toString(16).toUpperCase().padStart(2,'0')} → 0x01 ✓ terverifikasi`, 'ok');
-        setPatchState(1, 'done', 'PATCHED ✓');
+        setPatchState('done', 'PATCHED ✓');
       } else {
-        addLog(`ERROR: Write gagal!`, 'err');
-        setPatchState(1, 'error', 'WRITE FAIL');
+        addLog('ERROR: Write gagal!', 'err');
+        setPatchState('error', 'WRITE FAIL');
       }
     }
 
-    setProgress(90);
-    await sleep(250);
-
+    setProgress(90); await sleep(250);
     addLog('Membuat file output...', 'info');
+
     const blob = new Blob([data.buffer], { type: selectedFile.type || 'video/mp4' });
     const url = URL.createObjectURL(blob);
     const outName = selectedFile.name.replace(/(\.[^.]+)$/, '_LavenTaresPatcher$1');
@@ -791,9 +1046,7 @@
     resultInfo.innerHTML = `File siap: <span>${outName}</span> &nbsp;|&nbsp; <span>${formatSize(blob.size)}</span>`;
     resultInfo.classList.add('show');
 
-    setProgress(100);
-    await sleep(300);
-
+    setProgress(100); await sleep(300);
     addLog(`✓ Selesai! Klik tombol download untuk menyimpan.`, 'ok');
     btnPatch.disabled = false;
     await sleep(1200);
@@ -801,6 +1054,457 @@
   });
 
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+})();
+
+/* ═══════════════════════════════════════
+   ITS SCALE TAB LOGIC
+═══════════════════════════════════════ */
+(function() {
+  let selectedFile = null;
+  let selectedScale = 2;
+
+  const fileInput   = document.getElementById('s-fileInput');
+  const uploadZone  = document.getElementById('s-uploadZone');
+  const btnProcess  = document.getElementById('s-btnProcess');
+  const logBox      = document.getElementById('s-logBox');
+
+  function fmt(bytes) {
+    if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
+    return (bytes/1048576).toFixed(1) + ' MB';
+  }
+
+  function addLog(msg, type) {
+    const now = new Date();
+    const t = now.toTimeString().split(' ')[0];
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    const cls = type === 'ok' ? 'log-ok' : type === 'err' ? 'log-err' : type === 'warn' ? 'log-warn' : 'log-info';
+    line.innerHTML = `<span class="log-time">[${t}]</span><span class="${cls}">${msg}</span>`;
+    logBox.appendChild(line);
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  function setPatchState(state, statusText) {
+    const el = document.getElementById('s-patch1');
+    el.className = 'patch-item ' + state;
+    document.getElementById('s-status1').textContent = statusText;
+  }
+
+  function setProgress(pct, show) {
+    document.getElementById('s-patchProgress').textContent = pct + '% → 100%';
+    document.getElementById('s-opFill').style.width = pct + '%';
+    const bar = document.getElementById('s-opProgress');
+    if (show) bar.classList.add('show'); else bar.classList.remove('show');
+  }
+
+  // Scale selector
+  window.selectScale = function(n) {
+    selectedScale = n;
+    document.querySelectorAll('.scale-btn').forEach(b =>
+      b.classList.toggle('active', parseInt(b.dataset.scale) === n)
+    );
+  };
+
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault(); uploadZone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f && f.name.match(/\.(mp4|m4v)$/i)) setFile(f);
+    else addLog('ERROR: Harap upload file MP4.', 'err');
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
+
+  function setFile(f) {
+    selectedFile = f;
+    document.getElementById('s-fileName').textContent = f.name;
+    document.getElementById('s-fileSize').textContent = fmt(f.size);
+    document.getElementById('s-fileInfo').classList.add('show');
+    btnProcess.disabled = false;
+    document.getElementById('s-dlRow').classList.remove('show');
+    logBox.innerHTML = '';
+    addLog(`${f.name} (${fmt(f.size)}) siap diproses.`, 'ok');
+    setPatchState('', 'PENDING');
+    setProgress(0, false);
+  }
+
+  // MP4 atom helpers
+  function r32(dv,o)    { return dv.getUint32(o,false); }
+  function w32(dv,o,v)  { dv.setUint32(o,v,false); }
+  function r64(dv,o)    { return dv.getUint32(o,false)*4294967296+dv.getUint32(o+4,false); }
+  function w64(dv,o,v)  { dv.setUint32(o,Math.floor(v/4294967296),false); dv.setUint32(o+4,v>>>0,false); }
+  function fcc(dv,o)    { return String.fromCharCode(dv.getUint8(o),dv.getUint8(o+1),dv.getUint8(o+2),dv.getUint8(o+3)); }
+
+  const CONTAINERS = new Set(['moov','trak','mdia','minf','stbl','edts','udta','meta','dinf']);
+
+  function walk(dv, start, end, cb) {
+    let off = start;
+    while (off + 8 <= end) {
+      let size = r32(dv,off);
+      const name = fcc(dv,off+4);
+      let hdr = 8;
+      if (size===1) { size=r64(dv,off+8); hdr=16; }
+      if (size<8) break;
+      const ps = off+hdr;
+      cb(name,off,ps,size-hdr);
+      if (CONTAINERS.has(name)) walk(dv,ps,ps+(size-hdr),cb);
+      off+=size;
+    }
+  }
+
+  function rewriteMP4(buffer, scale) {
+    const ab = buffer.slice(0);
+    const dv = new DataView(ab);
+    const log = [];
+    let sttsCount = 0;
+
+    walk(dv, 0, ab.byteLength, (name,_bs,ps,pz) => {
+      if (name==='stts') {
+        const count=r32(dv,ps+4); let off=ps+8;
+        for (let i=0;i<count;i++) { w32(dv,off+4,r32(dv,off+4)*scale); off+=8; }
+        sttsCount++; log.push(`stts(${count})`);
+      }
+      if (name==='ctts') {
+        const ver=dv.getUint8(ps), count=r32(dv,ps+4); let off=ps+8;
+        for (let i=0;i<count;i++) {
+          if (ver===1) dv.setInt32(off+4,dv.getInt32(off+4,false)*scale,false);
+          else w32(dv,off+4,r32(dv,off+4)*scale);
+          off+=8;
+        }
+        log.push(`ctts(${count})`);
+      }
+      if (name==='mdhd') {
+        const v=dv.getUint8(ps);
+        if (v===0) { const o=ps+16; w32(dv,o,r32(dv,o)*scale); }
+        else       { const o=ps+24; w64(dv,o,r64(dv,o)*scale); }
+        log.push('mdhd');
+      }
+      if (name==='tkhd') {
+        const v=dv.getUint8(ps);
+        if (v===0) { const o=ps+20; w32(dv,o,r32(dv,o)*scale); }
+        else       { const o=ps+28; w64(dv,o,r64(dv,o)*scale); }
+        log.push('tkhd');
+      }
+      if (name==='mvhd') {
+        const v=dv.getUint8(ps);
+        if (v===0) { const o=ps+16; w32(dv,o,r32(dv,o)*scale); }
+        else       { const o=ps+24; w64(dv,o,r64(dv,o)*scale); }
+        log.push('mvhd');
+      }
+      if (name==='elst') {
+        const v=dv.getUint8(ps), count=r32(dv,ps+4); let off=ps+8;
+        for (let i=0;i<count;i++) {
+          if (v===0) { w32(dv,off,r32(dv,off)*scale); off+=12; }
+          else       { w64(dv,off,r64(dv,off)*scale); off+=20; }
+        }
+        log.push(`elst(${count})`);
+      }
+    });
+
+    return { buffer: ab, log, sttsCount };
+  }
+
+  btnProcess.addEventListener('click', async () => {
+    if (!selectedFile) return;
+    btnProcess.disabled = true;
+    document.getElementById('s-dlRow').classList.remove('show');
+    logBox.innerHTML = '';
+
+    addLog('Membaca file...', 'info');
+    setPatchState('active', 'RUNNING');
+    setProgress(10, true);
+    await sleep(50);
+
+    let buffer;
+    try {
+      buffer = await selectedFile.arrayBuffer();
+    } catch(e) {
+      addLog('Gagal membaca file: ' + e.message, 'err');
+      setPatchState('error', 'ERROR');
+      btnProcess.disabled = false; return;
+    }
+
+    addLog(fmt(buffer.byteLength) + ' dimuat ke memori.', 'ok');
+    setProgress(35, true); await sleep(50);
+
+    addLog('Memindai atom MP4...', 'info');
+    setProgress(55, true); await sleep(50);
+
+    let result;
+    try {
+      result = rewriteMP4(buffer, selectedScale);
+    } catch(e) {
+      addLog(e.message, 'err');
+      setPatchState('error', 'ERROR');
+      btnProcess.disabled = false; return;
+    }
+
+    if (result.sttsCount === 0) {
+      addLog('stts atom tidak ditemukan. Pastikan file adalah MP4 yang valid.', 'err');
+      setPatchState('error', 'ERROR');
+      btnProcess.disabled = false; return;
+    }
+
+    addLog('Atom dimodifikasi: ' + result.log.join(', '), 'ok');
+    setProgress(85, true); await sleep(50);
+
+    const blob = new Blob([result.buffer], { type: 'video/mp4' });
+    const url  = URL.createObjectURL(blob);
+    const srcFps = {2:60,3:90,4:120}[selectedScale];
+    const outName = selectedFile.name.replace(/\.(mp4|m4v)$/i,'') + `_x${selectedScale}.mp4`;
+
+    document.getElementById('s-dlBtn').href     = url;
+    document.getElementById('s-dlBtn').download = outName;
+    document.getElementById('s-dlMeta').textContent =
+      `×${selectedScale} · ${srcFps}fps → 30fps · ${fmt(blob.size)}`;
+    document.getElementById('s-dlRow').classList.add('show');
+
+    addLog(`Output siap: ${outName}`, 'ok');
+    setPatchState('done', 'DONE ✓');
+    setProgress(100, true);
+
+    btnProcess.disabled = false;
+  });
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+})();
+</script>
+
+<!-- ═══════════════════════════════════════
+     CYBER EFFECTS (dari Extension)
+     1. Cyber Sound (hover + click + success + error)
+     2. Shockwave Ring (klik)
+     3. Spark Particles (klik)
+     4. 3D Card Tilt (mousemove)
+     5. Spotlight Gradient (mousemove)
+═══════════════════════════════════════ -->
+<style>
+  /* ── SHOCKWAVE ── */
+  .shockwave {
+    position: fixed;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 99999;
+    width: 0px; height: 0px;
+    border: 2px solid rgba(108, 99, 255, 0.9);
+    box-shadow: 0 0 10px rgba(108, 99, 255, 0.5), inset 0 0 10px rgba(108, 99, 255, 0.4);
+    opacity: 1;
+    animation: shockwaveExpand 0.6s ease-out forwards;
+  }
+  @keyframes shockwaveExpand {
+    0%   { width: 0px; height: 0px; opacity: 1; border-width: 3px; }
+    100% { width: 400px; height: 400px; opacity: 0; border-width: 0px; }
+  }
+
+  /* ── SPARK ── */
+  .spark {
+    position: fixed;
+    width: 4px; height: 4px;
+    background: #6c63ff;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    box-shadow: 0 0 8px #6c63ff;
+  }
+
+  /* ── CARD 3D TILT ── */
+  .card {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: transform 0.1s ease, box-shadow 0.2s ease, border-color 0.25s !important;
+  }
+
+  /* ── SPOTLIGHT ── */
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      400px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(108, 99, 255, 0.10),
+      transparent 60%
+    );
+  }
+  .card:hover::before { opacity: 1; }
+  .card > * { position: relative; z-index: 1; }
+</style>
+
+<script>
+(function() {
+  /* ── AUDIO ENGINE ── */
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  let audioCtx;
+
+  function initAudio() {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+
+  function playCyberSound(type) {
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+      const master = audioCtx.createGain();
+      master.gain.value = 0.7;
+      master.connect(audioCtx.destination);
+
+      if (type === 'hover') {
+        const o1 = audioCtx.createOscillator();
+        const g1 = audioCtx.createGain();
+        o1.connect(g1); g1.connect(master);
+        o1.type = 'sine';
+        o1.frequency.setValueAtTime(1000, now);
+        o1.frequency.exponentialRampToValueAtTime(1500, now + 0.04);
+        g1.gain.setValueAtTime(0.18, now);
+        g1.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+        o1.start(now); o1.stop(now + 0.04);
+
+      } else if (type === 'click') {
+        const oLow = audioCtx.createOscillator();
+        const gLow = audioCtx.createGain();
+        oLow.connect(gLow); gLow.connect(master);
+        oLow.type = 'triangle';
+        oLow.frequency.setValueAtTime(160, now);
+        oLow.frequency.exponentialRampToValueAtTime(50, now + 0.12);
+        gLow.gain.setValueAtTime(0.5, now);
+        gLow.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        oLow.start(now); oLow.stop(now + 0.12);
+
+        const oHi = audioCtx.createOscillator();
+        const gHi = audioCtx.createGain();
+        const filt = audioCtx.createBiquadFilter();
+        filt.type = 'lowpass'; filt.frequency.value = 2000;
+        oHi.connect(filt); filt.connect(gHi); gHi.connect(master);
+        oHi.type = 'square';
+        oHi.frequency.setValueAtTime(700, now);
+        gHi.gain.setValueAtTime(0.2, now);
+        gHi.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+        oHi.start(now); oHi.stop(now + 0.06);
+
+      } else if (type === 'success') {
+        [440, 554, 659].forEach((freq, i) => {
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.connect(g); g.connect(master);
+          o.type = 'sine';
+          o.frequency.setValueAtTime(freq, now + i * 0.06);
+          g.gain.setValueAtTime(0.25, now + i * 0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+          o.start(now); o.stop(now + 0.45);
+        });
+
+      } else if (type === 'error') {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.connect(g); g.connect(master);
+        o.type = 'sawtooth';
+        o.frequency.setValueAtTime(160, now);
+        o.frequency.linearRampToValueAtTime(90, now + 0.22);
+        g.gain.setValueAtTime(0.4, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        o.start(now); o.stop(now + 0.22);
+      }
+    } catch(e) {}
+  }
+
+  /* ── SHOCKWAVE + SPARK ON CLICK ── */
+  document.addEventListener('click', (e) => {
+    playCyberSound('click');
+
+    // Shockwave ring
+    const wave = document.createElement('div');
+    wave.classList.add('shockwave');
+    wave.style.left = e.clientX + 'px';
+    wave.style.top  = e.clientY + 'px';
+
+    // Warna merah untuk tombol download/error
+    const isRed = e.target.closest('.btn-download, #s-dlBtn');
+    if (isRed) {
+      wave.style.borderColor = 'rgba(248, 113, 113, 0.9)';
+      wave.style.boxShadow   = '0 0 10px rgba(248,113,113,0.5), inset 0 0 10px rgba(248,113,113,0.4)';
+    }
+    document.body.appendChild(wave);
+    setTimeout(() => wave.remove(), 620);
+
+    // Sparks
+    const sparkColor = isRed ? '#f87171' : '#6c63ff';
+    for (let i = 0; i < 8; i++) {
+      const spark = document.createElement('div');
+      spark.classList.add('spark');
+      spark.style.left       = e.clientX + 'px';
+      spark.style.top        = e.clientY + 'px';
+      spark.style.background = sparkColor;
+      spark.style.boxShadow  = `0 0 8px ${sparkColor}`;
+      document.body.appendChild(spark);
+
+      const angle    = Math.random() * Math.PI * 2;
+      const velocity = Math.random() * 65 + 20;
+      spark.animate([
+        { transform: 'translate(0,0) scale(1)', opacity: 1 },
+        { transform: `translate(${Math.cos(angle)*velocity}px, ${Math.sin(angle)*velocity}px) scale(0)`, opacity: 0 }
+      ], { duration: 380 + Math.random() * 200, easing: 'cubic-bezier(0,.9,.57,1)' })
+        .onfinish = () => spark.remove();
+    }
+  });
+
+  /* ── HOVER SOUND ── */
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest('button, .tab-btn, .scale-btn, .feat-card, .tiktok-badge, .btn-download, .dl-btn')) {
+      playCyberSound('hover');
+    }
+  });
+
+  /* ── SUCCESS / ERROR SOUND (patch + download) ── */
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach(m => {
+      m.addedNodes.forEach(node => {
+        if (node.nodeType === 1) {
+          if (node.classList && node.classList.contains('log-line')) {
+            const text = node.textContent || '';
+            if (text.includes('BERHASIL') || text.includes('DONE ✓') || text.includes('Selesai') || text.includes('siap')) {
+              setTimeout(() => playCyberSound('success'), 100);
+            } else if (text.includes('ERROR') || text.includes('Gagal') || text.includes('FAIL')) {
+              playCyberSound('error');
+            }
+          }
+        }
+      });
+    });
+  });
+  document.querySelectorAll('.log-box').forEach(lb => observer.observe(lb, { childList: true }));
+
+  /* ── 3D CARD TILT + SPOTLIGHT ── */
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width  / 2;
+      const cy = rect.height / 2;
+      const rotX = ((y - cy) / 14) * -1;
+      const rotY = (x - cx)  / 14;
+      card.style.transform   = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.012)`;
+      card.style.boxShadow   = `${(x-cx)/6}px ${(y-cy)/6}px 24px rgba(0,0,0,0.4)`;
+      card.style.setProperty('--mx', x + 'px');
+      card.style.setProperty('--my', y + 'px');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transition  = 'transform 0.5s ease, box-shadow 0.5s ease, border-color 0.25s';
+      card.style.transform   = 'perspective(900px) rotateX(0) rotateY(0) scale(1)';
+      card.style.boxShadow   = '';
+    });
+    card.addEventListener('mouseenter', () => {
+      card.style.transition  = 'transform 0.1s ease, box-shadow 0.15s ease, border-color 0.25s';
+    });
+  });
+
+})();
 </script>
 </body>
 </html>
